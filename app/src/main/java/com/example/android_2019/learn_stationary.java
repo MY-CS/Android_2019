@@ -2,36 +2,29 @@ package com.example.android_2019;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
-
-import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 //setContentView(R.layout.activity_learn);
 
-public class learn extends AppCompatActivity implements Runnable, SensorEventListener{
+public class learn_stationary extends AppCompatActivity implements Runnable, SensorEventListener {
 
     SensorManager sm;
     TextView tv;
     Handler h;
     float gx, gy, gz;
     double acc;
-    String file_name = "data_run.csv";
+    String file_name = "data_stationary.csv";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +49,8 @@ public class learn extends AppCompatActivity implements Runnable, SensorEventLis
                 + "ACCis : " + acc + "\n");
 
         //ここからファイルの書き込みの追加
-        String str_data = String.valueOf(acc);
-        saveFile(file_name, str_data);
+//        acc = Math.sqrt(gx * gx + gy * gy + gz * gz);
+        saveFile(file_name, acc);
         //
 
         h.postDelayed(this, 500);
@@ -100,18 +93,34 @@ public class learn extends AppCompatActivity implements Runnable, SensorEventLis
     //csvというか一応文字列の数値をカンマ区切りで書き込む感じにとりあえずした
     //ファイルの中身を見てみた感じ, いけてるとは思う
     //x軸だけでやってみるとちゃんと変化して書き込まれたけど, 合成加速度にすると全然変化がしないんだけど
-    public void saveFile(String file_name, String str_data) {
+    // ACCも表示してみた感じ変化してはいるが, 全然変化しないのはなんでなんだろ
+    public void saveFile(String file_name, double data) {
 
         // try-with-resources
         try {
             FileOutputStream fileOutputstream = openFileOutput(file_name, MODE_APPEND);
-            fileOutputstream.write("2".getBytes());
+            fileOutputstream.write("0".getBytes());
             fileOutputstream.write(",".getBytes());
-            fileOutputstream.write(String.valueOf(str_data).getBytes());
+            fileOutputstream.write(String.valueOf(data).getBytes());
             fileOutputstream.write("\n".getBytes());
+
+            // 出力ファイルの作成
+            // 上の奴を使わないとfilesにファイルができない
+//            FileWriter f = new FileWriter(file_name, true);
+//            PrintWriter p = new PrintWriter(new BufferedWriter(f));
+//
+//            // 書き込み
+//            p.print(0); // クラスラベルのつもり
+//            p.print(",");
+//            p.print(data); // 合成加速度
+//            p.println();   // 改行
+//
+//            // ファイルに書き出し閉じる
+//            p.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

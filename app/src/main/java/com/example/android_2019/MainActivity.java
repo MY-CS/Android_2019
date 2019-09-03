@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.learn).setOnClickListener(this);
         findViewById(R.id.learn_walking).setOnClickListener(this);
+        findViewById(R.id.learn_stationary).setOnClickListener(this);
     }
 
     //ボタンが押された時の処理
@@ -27,6 +28,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.learn_walking:
                 Intent intent2 = new Intent(this, learn_walking.class);  //インテントの作成
                 startActivity(intent2);
+                break;
+            case R.id.learn_stationary:
+                Intent intent3 = new Intent(this, learn_stationary.class);  //インテントの作成
+                startActivity(intent3);
                 break;
         }
     }
