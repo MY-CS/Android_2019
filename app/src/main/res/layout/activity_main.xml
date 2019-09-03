@@ -12,16 +12,16 @@
         android:layout_height="62dp"
         android:layout_marginStart="120dp"
         android:layout_marginLeft="120dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="105dp"
         android:layout_marginRight="105dp"
-        android:layout_marginBottom="144dp"
+        android:layout_marginBottom="32dp"
         android:text="start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintHorizontal_bias="0.055"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/learn_stationary" />
+        app:layout_constraintTop_toBottomOf="@+id/classifier" />
 
     <TextView
         android:id="@+id/textView"
@@ -60,14 +60,12 @@
         android:layout_height="70dp"
         android:layout_marginStart="122dp"
         android:layout_marginLeft="122dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="122dp"
         android:layout_marginRight="122dp"
-        android:layout_marginBottom="26dp"
         android:text="learn_stationary"
-        app:layout_constraintBottom_toTopOf="@+id/start"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/learn_walking" />
 
@@ -87,5 +85,21 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/learn" />
+
+    <Button
+        android:id="@+id/classifier"
+        android:layout_width="164dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="125dp"
+        android:layout_marginLeft="125dp"
+        android:layout_marginTop="66dp"
+        android:layout_marginEnd="122dp"
+        android:layout_marginRight="122dp"
+        android:layout_marginBottom="51dp"
+        android:text="classifier"
+        app:layout_constraintBottom_toTopOf="@+id/start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/learn_stationary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
