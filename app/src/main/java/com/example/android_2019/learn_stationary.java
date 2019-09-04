@@ -99,7 +99,7 @@ public class learn_stationary extends AppCompatActivity implements Runnable, Sen
         // try-with-resources
         try {
             FileOutputStream fileOutputstream = openFileOutput(file_name, MODE_APPEND);
-            fileOutputstream.write("0".getBytes());
+            fileOutputstream.write("stationary".getBytes());
             fileOutputstream.write(",".getBytes());
             fileOutputstream.write(String.valueOf(data).getBytes());
             fileOutputstream.write("\n".getBytes());

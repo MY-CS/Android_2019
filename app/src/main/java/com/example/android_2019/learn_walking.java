@@ -110,7 +110,7 @@ public class learn_walking extends AppCompatActivity implements Runnable, Sensor
         // try-with-resources
         try {
             FileOutputStream fileOutputstream = openFileOutput(file_name, MODE_APPEND);
-            fileOutputstream.write("1".getBytes());
+            fileOutputstream.write("walking".getBytes());
             fileOutputstream.write(",".getBytes());
             fileOutputstream.write(String.valueOf(data).getBytes());
             fileOutputstream.write("\n".getBytes());

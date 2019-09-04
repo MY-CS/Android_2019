@@ -4,13 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.io.FileOutputStream;
+import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
+import weka.classifiers.trees.J48;
+import weka.core.Attribute;
+import weka.core.FastVector;
+import weka.core.Instance;
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
+import androidx.appcompat.app.AlertDialog;
 
 public class classifier extends AppCompatActivity {
 
@@ -21,10 +30,27 @@ public class classifier extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classifier);
 
-        make_arffHeader(make_file_name);
-        make_arffFile(make_file_name, "data_stationary.csv");
-        make_arffFile(make_file_name, "data_walking.csv");
-        make_arffFile(make_file_name, "data_run.csv");
+        this.make_arffHeader(make_file_name);
+        this.make_arffFile(make_file_name, "data_stationary.csv");
+        this.make_arffFile(make_file_name, "data_walking.csv");
+        this.make_arffFile(make_file_name, "data_run.csv");
+
+
+        // dialogを出したい
+        AlertDialog.Builder alertDialog =new AlertDialog.Builder(this);
+        alertDialog.setTitle("Finish making file")
+                .setMessage("finish making file")
+                .setPositiveButton("OK", null)
+                .show();
+
+
+        // ここもエラーが出たのでcatchした
+        try {
+            this.build_classifier(make_file_name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -35,7 +61,7 @@ public class classifier extends AppCompatActivity {
             FileOutputStream fileOutputstream = openFileOutput(make_file_name, MODE_APPEND);
             fileOutputstream.write("@relation data\n".getBytes());
             fileOutputstream.write("\n".getBytes());
-            fileOutputstream.write("@attribute label numeric\n".getBytes());
+            fileOutputstream.write("@attribute label {stationary, walking, run}\n".getBytes());
             fileOutputstream.write("@attribute acc numeric\n".getBytes());
             fileOutputstream.write("\n".getBytes());
             fileOutputstream.write("@data\n".getBytes());
@@ -51,12 +77,14 @@ public class classifier extends AppCompatActivity {
 
         // try-with-resources
         try {
+            // arffファイルを作る
+            // とりあえず全部そのままStringでやってるのでそこを直さないとかも
+            // arffでdoubleのデータ型はどうなるのか?
 
             FileOutputStream fileOutputstream = openFileOutput(write_file_name, MODE_APPEND);
 
             FileInputStream fileInputStream = openFileInput(read_file_name);
             BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8));
-
 
             String lineBuffer;
             while ((lineBuffer = reader.readLine()) != null) {
@@ -71,5 +99,55 @@ public class classifier extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    // これはまだテストできてない
+    // まずarffをちゃんと読み込めかが分からない
+    // arffでdoubleの型はどうなっているのか?
+    // 全部文字列でやってるけど大丈夫なのか->ダメなら数値でファイルをどうにかして書き換える必要がある
+
+    // エラーがめんどくさいのでスローした
+    // モデルのファイルができてないのでここはできてないきがする
+    public void build_classifier(String arff_file_name) throws Exception{
+        // build clf
+        DataSource source = new DataSource(arff_file_name);
+        Instances instances = source.getDataSet();
+        instances.setClassIndex(0);
+        Classifier clf = new J48();
+        clf.buildClassifier(instances);
+
+        // evaluation
+        // データの分割とかGridseachCVとか色々あると思うけどとりあえずサンプルどうりに
+        //パラメータの決定をどうするか
+        Evaluation eval = new Evaluation(instances);
+        eval.evaluateModel(clf, instances);
+
+        // ここのダイアログも出ない, やっぱりarffファイルを用いた学習ができてない
+        AlertDialog.Builder result_dialog =new AlertDialog.Builder(this);
+        result_dialog.setTitle("Evaluation result")
+                .setMessage(eval.toSummaryString())
+                .setPositiveButton("OK", null)
+                .show();
+//        System.out.println(eval.toSummaryString());
+
+        // ここら辺横にエラー出てることいいのかな?
+        try {
+            // serialize model
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("j48.model"));
+            oos.writeObject(clf);
+            oos.flush();
+            oos.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Finish Leaningとか出したいな
+        //やっぱりダイアログが表示されない, ここまで来てない気がする
+        AlertDialog.Builder alertDialog =new AlertDialog.Builder(this);
+        alertDialog.setTitle("Finish learning")
+                .setMessage("finish learning")
+                .setPositiveButton("OK", null)
+                .show();
     }
 }
