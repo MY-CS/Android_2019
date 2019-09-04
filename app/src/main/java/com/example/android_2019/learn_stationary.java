@@ -105,24 +105,24 @@ public class learn_stationary extends AppCompatActivity implements Runnable, Sen
         // try-with-resources
         try {
             FileOutputStream fileOutputstream = openFileOutput(file_name, MODE_APPEND);
-//            fileOutputstream.write("stationary".getBytes());
-//            fileOutputstream.write(",".getBytes());
-//            fileOutputstream.write(String.valueOf(data).getBytes());
-//            fileOutputstream.write("\n".getBytes());
+            fileOutputstream.write(String.valueOf(data).getBytes());
+            fileOutputstream.write(",".getBytes());
+            fileOutputstream.write("stationary".getBytes());
+            fileOutputstream.write("\n".getBytes());
 
-//             出力ファイルの作成
-//             上の奴を使わないとfilesにファイルができない
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputstream));
-//            FileWriter f = new FileWriter(file_name, true);
-            PrintWriter p = new PrintWriter(bw);
-
-            // 書き込み
-            p.print("stationary"); // クラスラベルのつもり
-            p.print(",");
-            p.println(data); // 合成加速度
-
-            // ファイルに書き出し閉じる
-            p.close();
+////             出力ファイルの作成
+////             上の奴を使わないとfilesにファイルができない
+//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputstream));
+////            FileWriter f = new FileWriter(file_name, true);
+//            PrintWriter p = new PrintWriter(bw);
+//
+//            // 書き込み
+//            p.print("stationary"); // クラスラベルのつもり
+//            p.print(",");
+//            p.println(data); // 合成加速度
+//
+//            // ファイルに書き出し閉じる
+//            p.close();
 
         } catch (IOException e) {
             e.printStackTrace();

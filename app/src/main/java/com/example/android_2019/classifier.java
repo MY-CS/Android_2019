@@ -40,12 +40,11 @@ public class classifier extends AppCompatActivity {
 
 
         // dialogを出したい
-        AlertDialog.Builder alertDialog =new AlertDialog.Builder(this);
-        alertDialog.setTitle("Finish making file")
-                .setMessage("finish making file")
-                .setPositiveButton("OK", null)
-                .show();
-
+//        AlertDialog.Builder alertDialog =new AlertDialog.Builder(this);
+//        alertDialog.setTitle("Finish making file")
+//                .setMessage("finish making file")
+//                .setPositiveButton("OK", null)
+//                .show();
 
         // ここもエラーが出たのでcatchした
         try {
@@ -62,10 +61,10 @@ public class classifier extends AppCompatActivity {
         try {
 
             FileOutputStream fileOutputstream = openFileOutput(make_file_name, MODE_APPEND);
-            fileOutputstream.write("@relation data\n".getBytes());
+            fileOutputstream.write("@relation ACC_data\n".getBytes());
             fileOutputstream.write("\n".getBytes());
-            fileOutputstream.write("@attribute label {stationary, walking, run}\n".getBytes());
             fileOutputstream.write("@attribute acc numeric\n".getBytes());
+            fileOutputstream.write("@attribute label {stationary, walking, run}\n".getBytes());
             fileOutputstream.write("\n".getBytes());
             fileOutputstream.write("@data\n".getBytes());
 
@@ -76,7 +75,7 @@ public class classifier extends AppCompatActivity {
 
 
     public void make_arffFile(String write_file_name, String read_file_name) {
-        String [] line = null;
+//        String [] line = null;
 
         // try-with-resources
         try {
@@ -93,41 +92,18 @@ public class classifier extends AppCompatActivity {
             // arffにするときにdoubleに変換して書き込むのが良さそう
             String lineBuffer;
             while ((lineBuffer = reader.readLine()) != null) {
-                line = lineBuffer.split(",");
-                fileOutputstream.write(line[0].getBytes());
-                fileOutputstream.write(",".getBytes());
-                fileOutputstream.write(line[1].getBytes());
+                fileOutputstream.write(lineBuffer.getBytes());
                 fileOutputstream.write("\n".getBytes());
+//                line = lineBuffer.split(",");
+//                fileOutputstream.write(line[0].getBytes());
+//                fileOutputstream.write(",".getBytes());
+//                fileOutputstream.write(line[1].getBytes());
+//                fileOutputstream.write("\n".getBytes());
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        try {
-//            FileOutputStream fileOutputstream = openFileOutput(file_name, MODE_APPEND);
-////            fileOutputstream.write("stationary".getBytes());
-////            fileOutputstream.write(",".getBytes());
-////            fileOutputstream.write(String.valueOf(data).getBytes());
-////            fileOutputstream.write("\n".getBytes());
-//
-////             出力ファイルの作成
-////             上の奴を使わないとfilesにファイルができない
-//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputstream));
-////            FileWriter f = new FileWriter(file_name, true);
-//            PrintWriter p = new PrintWriter(bw);
-//
-//            // 書き込み
-//            p.print("stationary"); // クラスラベルのつもり
-//            p.print(",");
-//            p.println(data); // 合成加速度
-//
-//            // ファイルに書き出し閉じる
-//            p.close();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
     }
 
@@ -140,21 +116,21 @@ public class classifier extends AppCompatActivity {
     // モデルのファイルができてないのでここはできてないきがする
     public void build_classifier(String arff_file_name) throws Exception{
         // build clf
-        // ファイルに今のcsvを結合して渡してみてできるか知りたい
-        DataSource source = new DataSource(arff_file_name);
+        FileInputStream fileInputStream = openFileInput(arff_file_name);
+        DataSource source = new DataSource(fileInputStream);
         Instances instances = source.getDataSet();
-        System.out.println(instances);
-        instances.setClassIndex(0);
+        instances.setClassIndex(1);
         Classifier clf = new J48();
         clf.buildClassifier(instances);
 
         // evaluation
         // データの分割とかGridseachCVとか色々あると思うけどとりあえずサンプルどうりに
         //パラメータの決定をどうするか
+
         Evaluation eval = new Evaluation(instances);
         eval.evaluateModel(clf, instances);
 
-        // ここのダイアログも出ない, やっぱりarffファイルを用いた学習ができてない
+         //ここのダイアログも出ない, やっぱりarffファイルを用いた学習ができてない
         AlertDialog.Builder result_dialog =new AlertDialog.Builder(this);
         result_dialog.setTitle("Evaluation result")
                 .setMessage(eval.toSummaryString())
@@ -165,7 +141,8 @@ public class classifier extends AppCompatActivity {
         // ここら辺横にエラー出てることいいのかな?
         try {
             // serialize model
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("j48.model"));
+            FileOutputStream fileOutputstream = openFileOutput("J48.model", MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fileOutputstream);
             oos.writeObject(clf);
             oos.flush();
             oos.close();
@@ -176,10 +153,10 @@ public class classifier extends AppCompatActivity {
 
         // Finish Leaningとか出したいな
         //やっぱりダイアログが表示されない, ここまで来てない
-        AlertDialog.Builder alertDialog =new AlertDialog.Builder(this);
-        alertDialog.setTitle("Finish learning")
-                .setMessage("finish learning")
-                .setPositiveButton("OK", null)
-                .show();
+//        AlertDialog.Builder alertDialog =new AlertDialog.Builder(this);
+//        alertDialog.setTitle("Finish learning")
+//                .setMessage("finish learning")
+//                .setPositiveButton("OK", null)
+//                .show();
     }
 }

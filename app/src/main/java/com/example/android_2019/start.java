@@ -50,7 +50,8 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
 
         try {
             // deserialize model
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("j48.model"));
+            FileInputStream fileInputStream = openFileInput("J48.model");
+            ObjectInputStream ois = new ObjectInputStream(fileInputStream);
             this.clf = (Classifier) ois.readObject();
             ois.close();
 
@@ -79,28 +80,40 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
         //make instance
         // ここは文字列の数字かな? ファイルではnumericってやったけど
         // indexは0なのかな？, インスタンスの作り方がよく分からん
-        Attribute atri_acc = new Attribute("acc", 1);
+
+        Attribute attri_acc = new Attribute("acc", 0);
 
         Instance instance = new DenseInstance(2);
-        instance.setValue(atri_acc, acc);
+        instance.setValue(attri_acc, acc);
 
         // これはinstancesというデータセットにinstanceを追加する?的なものみたいなので
         // とりあえずスルー
-        //instance.setDataset(instances);
+//        instance.setDataset(instances);
 
         // エラーが出るのでtry, catchしてみた
         double result = 0.0;
+        //ここは通ってる
+
         try {
+            //ここのブロックの中には入っている
             // 予測, 0.0がstationary, 1.0がwalking, 2.0がrunのはず
             result = clf.classifyInstance(instance);
+            System.out.println("result is" + result);
+            //ここが出力されず予測できてない
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         // ダイアログ表示
-        if (result == 1.0 || result == 2.0) {
-            AlertDialog.Builder alertDialog =new AlertDialog.Builder(this);
-            alertDialog.setTitle("Alert")
+        if (result == 1.0) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setTitle("Alert 歩き状態")
+                    .setMessage("歩きスマホをやめてください")
+                    .setPositiveButton("OK", null)
+                    .show();
+        } else if (result == 2.0) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setTitle("Alert 走り状態")
                     .setMessage("歩きスマホをやめてください")
                     .setPositiveButton("OK", null)
                     .show();
