@@ -13,6 +13,9 @@ import android.os.Handler;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.List;
 
 import java.io.BufferedReader;
@@ -56,8 +59,8 @@ public class learn extends AppCompatActivity implements Runnable, SensorEventLis
                 + "ACCis : " + acc + "\n");
 
         //ここからファイルの書き込みの追加
-        String str_data = String.valueOf(acc);
-        saveFile(file_name, str_data);
+//        String str_data = String.valueOf(acc);
+        saveFile(file_name, acc);
         //
 
         h.postDelayed(this, 500);
@@ -100,15 +103,29 @@ public class learn extends AppCompatActivity implements Runnable, SensorEventLis
     //csvというか一応文字列の数値をカンマ区切りで書き込む感じにとりあえずした
     //ファイルの中身を見てみた感じ, いけてるとは思う
     //x軸だけでやってみるとちゃんと変化して書き込まれたけど, 合成加速度にすると全然変化がしないんだけど
-    public void saveFile(String file_name, String str_data) {
+    public void saveFile(String file_name, double data) {
 
         // try-with-resources
         try {
             FileOutputStream fileOutputstream = openFileOutput(file_name, MODE_APPEND);
-            fileOutputstream.write("run".getBytes());
-            fileOutputstream.write(",".getBytes());
-            fileOutputstream.write(String.valueOf(str_data).getBytes());
-            fileOutputstream.write("\n".getBytes());
+//            fileOutputstream.write("stationary".getBytes());
+//            fileOutputstream.write(",".getBytes());
+//            fileOutputstream.write(String.valueOf(data).getBytes());
+//            fileOutputstream.write("\n".getBytes());
+
+//             出力ファイルの作成
+//             上の奴を使わないとfilesにファイルができない
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputstream));
+//            FileWriter f = new FileWriter(file_name, true);
+            PrintWriter p = new PrintWriter(bw);
+
+            // 書き込み
+            p.print("stationary"); // クラスラベルのつもり
+            p.print(",");
+            p.println(data); // 合成加速度
+
+            // ファイルに書き出し閉じる
+            p.close();
 
         } catch (IOException e) {
             e.printStackTrace();

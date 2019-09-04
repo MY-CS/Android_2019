@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.io.FileOutputStream;
 import weka.classifiers.Classifier;
@@ -86,6 +89,8 @@ public class classifier extends AppCompatActivity {
             FileInputStream fileInputStream = openFileInput(read_file_name);
             BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8));
 
+            //分割の処理の仕方がややこしそうなのでcsvは前の通り文字列で書き込んで
+            // arffにするときにdoubleに変換して書き込むのが良さそう
             String lineBuffer;
             while ((lineBuffer = reader.readLine()) != null) {
                 line = lineBuffer.split(",");
@@ -99,6 +104,31 @@ public class classifier extends AppCompatActivity {
             e.printStackTrace();
         }
 
+//        try {
+//            FileOutputStream fileOutputstream = openFileOutput(file_name, MODE_APPEND);
+////            fileOutputstream.write("stationary".getBytes());
+////            fileOutputstream.write(",".getBytes());
+////            fileOutputstream.write(String.valueOf(data).getBytes());
+////            fileOutputstream.write("\n".getBytes());
+//
+////             出力ファイルの作成
+////             上の奴を使わないとfilesにファイルができない
+//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputstream));
+////            FileWriter f = new FileWriter(file_name, true);
+//            PrintWriter p = new PrintWriter(bw);
+//
+//            // 書き込み
+//            p.print("stationary"); // クラスラベルのつもり
+//            p.print(",");
+//            p.println(data); // 合成加速度
+//
+//            // ファイルに書き出し閉じる
+//            p.close();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
     }
 
     // これはまだテストできてない
@@ -110,8 +140,10 @@ public class classifier extends AppCompatActivity {
     // モデルのファイルができてないのでここはできてないきがする
     public void build_classifier(String arff_file_name) throws Exception{
         // build clf
+        // ファイルに今のcsvを結合して渡してみてできるか知りたい
         DataSource source = new DataSource(arff_file_name);
         Instances instances = source.getDataSet();
+        System.out.println(instances);
         instances.setClassIndex(0);
         Classifier clf = new J48();
         clf.buildClassifier(instances);
@@ -143,7 +175,7 @@ public class classifier extends AppCompatActivity {
         }
 
         // Finish Leaningとか出したいな
-        //やっぱりダイアログが表示されない, ここまで来てない気がする
+        //やっぱりダイアログが表示されない, ここまで来てない
         AlertDialog.Builder alertDialog =new AlertDialog.Builder(this);
         alertDialog.setTitle("Finish learning")
                 .setMessage("finish learning")
