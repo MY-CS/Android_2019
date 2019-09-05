@@ -69,6 +69,7 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
 
 
         LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.VERTICAL);
         setContentView(ll);
 
         tv = new TextView(this);
@@ -78,7 +79,7 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
         ll.addView(alert_tv);
 
         h = new Handler();
-        h.postDelayed(this, 200);
+        h.postDelayed(this, 20);
     }
 
     @Override
@@ -111,7 +112,7 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
         // ダイアログ表示
         if (result == 1.0) {
             alert_tv.setText("Alert 歩き状態");
-            alert_tv.setTextSize(32.0f);
+            alert_tv.setTextSize(30.0f);
 //            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 //            alertDialog.setTitle("Alert 歩き状態")
 //                    .setMessage("歩きスマホをやめてください")
@@ -119,7 +120,7 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
 //                    .show();
         } else if (result == 2.0) {
             alert_tv.setText("Alert 走り状態");
-            alert_tv.setTextSize(32.0f);
+            alert_tv.setTextSize(30.0f);
 //            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 //            alertDialog.setTitle("Alert 走り状態")
 //                    .setMessage("歩きスマホをやめてください")
@@ -127,7 +128,7 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
 //                    .show();
         } else if (result == 0.0) {
             alert_tv.setText("静止状態");
-            alert_tv.setTextSize(32.0f);
+            alert_tv.setTextSize(30.0f);
 //            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 //            alertDialog.setTitle("Alert 走り状態")
 //                    .setMessage("歩きスマホをやめてください")

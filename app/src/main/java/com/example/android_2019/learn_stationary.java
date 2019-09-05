@@ -37,6 +37,7 @@ public class learn_stationary extends AppCompatActivity implements Runnable, Sen
         super.onCreate(savedInstanceState);
 
         LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.VERTICAL);
         setContentView(ll);
 
         tv = new TextView(this);
@@ -46,7 +47,7 @@ public class learn_stationary extends AppCompatActivity implements Runnable, Sen
         ll.addView(finish_tv);
 
         h = new Handler();
-        h.postDelayed(this, 200);
+        h.postDelayed(this, 20);
     }
 
     @Override
@@ -62,9 +63,9 @@ public class learn_stationary extends AppCompatActivity implements Runnable, Sen
         saveFile(file_name, acc);
 
         num_sample += 1;
-        if (num_sample > 300) {
-            finish_tv.setText("Finish collecting stationary data");
-            finish_tv.setTextSize(32.0f);
+        if (num_sample > 400) {
+            finish_tv.setText("Finish collecting data");
+            finish_tv.setTextSize(30.0f);
 //            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 //            alertDialog.setTitle("Finish learning stationary")
 //                    .setMessage("静止状態のデータ収集が完了")
@@ -72,7 +73,7 @@ public class learn_stationary extends AppCompatActivity implements Runnable, Sen
 //                    .show();
         }
 
-        h.postDelayed(this, 200);
+        h.postDelayed(this, 20);
     }
 
     @Override

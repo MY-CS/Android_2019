@@ -45,6 +45,7 @@ public class learn_walking extends AppCompatActivity implements Runnable, Sensor
         super.onCreate(savedInstanceState);
 
         LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.VERTICAL);
         setContentView(ll);
 
         tv = new TextView(this);
@@ -54,7 +55,7 @@ public class learn_walking extends AppCompatActivity implements Runnable, Sensor
         ll.addView(finish_tv);
 
         h = new Handler();
-        h.postDelayed(this, 200);
+        h.postDelayed(this, 20);
     }
 
     @Override
@@ -69,9 +70,9 @@ public class learn_walking extends AppCompatActivity implements Runnable, Sensor
         saveFile(file_name, acc);
 
         num_sample += 1;
-        if (num_sample > 300) {
-            finish_tv.setText("Finish collecting walking data");
-            finish_tv.setTextSize(32.0f);
+        if (num_sample > 400) {
+            finish_tv.setText("Finish collecting data");
+            finish_tv.setTextSize(30.0f);
 //            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 //            alertDialog.setTitle("Finish learning walking")
 //                    .setMessage("歩き状態のデータ収集が完了")
@@ -79,7 +80,7 @@ public class learn_walking extends AppCompatActivity implements Runnable, Sensor
 //                    .show();
         }
 
-        h.postDelayed(this, 200);
+        h.postDelayed(this, 20);
     }
 
     @Override

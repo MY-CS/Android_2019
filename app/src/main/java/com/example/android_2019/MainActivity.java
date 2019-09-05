@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.learn_stationary).setOnClickListener(this);
         findViewById(R.id.classifier).setOnClickListener(this);
         findViewById(R.id.start).setOnClickListener(this);
+
     }
 
     //ボタンが押された時の処理

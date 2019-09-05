@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import android.app.AlertDialog;
+import android.view.Gravity;
 
 public class learn extends AppCompatActivity implements Runnable, SensorEventListener{
 
@@ -41,6 +42,7 @@ public class learn extends AppCompatActivity implements Runnable, SensorEventLis
         super.onCreate(savedInstanceState);
 
         LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.VERTICAL);
         setContentView(ll);
 
         tv = new TextView(this);
@@ -50,7 +52,7 @@ public class learn extends AppCompatActivity implements Runnable, SensorEventLis
         ll.addView(finish_tv);
 
         h = new Handler();
-        h.postDelayed(this, 200);
+        h.postDelayed(this, 20);
     }
 
     @Override
@@ -65,9 +67,10 @@ public class learn extends AppCompatActivity implements Runnable, SensorEventLis
         saveFile(file_name, acc);
 
         num_sample += 1;
-        if (num_sample > 300) {
-            finish_tv.setText("Finish collecting running data");
-            finish_tv.setTextSize(32.0f);
+        if (num_sample > 400) {
+            finish_tv.setText("Finish collecting data");
+            finish_tv.setTextSize(30.0f);
+//            finish_tv.setGravity(Gravity.TOP|Gravity.CENTER);
 //            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 //            alertDialog.setTitle("Finish learning running")
 //                    .setMessage("走り状態のデータ収集が完了")
@@ -76,7 +79,7 @@ public class learn extends AppCompatActivity implements Runnable, SensorEventLis
         }
 
 
-        h.postDelayed(this, 200);
+        h.postDelayed(this, 20);
     }
 
     @Override
