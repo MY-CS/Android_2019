@@ -18,6 +18,7 @@ import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.trees.J48;
 import weka.core.Attribute;
+import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -63,8 +64,8 @@ public class classifier extends AppCompatActivity {
             FileOutputStream fileOutputstream = openFileOutput(make_file_name, MODE_APPEND);
             fileOutputstream.write("@relation ACC_data\n".getBytes());
             fileOutputstream.write("\n".getBytes());
-            fileOutputstream.write("@attribute acc numeric\n".getBytes());
-            fileOutputstream.write("@attribute label {stationary, walking, run}\n".getBytes());
+            fileOutputstream.write("@attribute acc real\n".getBytes());
+            fileOutputstream.write("@attribute label{stationary,walking,run}\n".getBytes());
             fileOutputstream.write("\n".getBytes());
             fileOutputstream.write("@data\n".getBytes());
 
@@ -130,14 +131,13 @@ public class classifier extends AppCompatActivity {
         Evaluation eval = new Evaluation(instances);
         eval.evaluateModel(clf, instances);
 
-         //ここのダイアログも出ない, やっぱりarffファイルを用いた学習ができてない
         AlertDialog.Builder result_dialog =new AlertDialog.Builder(this);
         result_dialog.setTitle("Evaluation result")
                 .setMessage(eval.toSummaryString())
                 .setPositiveButton("OK", null)
                 .show();
 //        System.out.println(eval.toSummaryString());
-
+//
         // ここら辺横にエラー出てることいいのかな?
         try {
             // serialize model

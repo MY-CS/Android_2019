@@ -110,7 +110,7 @@ public class learn extends AppCompatActivity implements Runnable, SensorEventLis
         try {
             FileOutputStream fileOutputstream = openFileOutput(file_name, MODE_APPEND);
             fileOutputstream.write(String.valueOf(data).getBytes());
-            fileOutputstream.write(",".getBytes());
+            fileOutputstream.write(", ".getBytes());
             fileOutputstream.write("run".getBytes());
             fileOutputstream.write("\n".getBytes());
 

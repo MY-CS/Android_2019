@@ -42,6 +42,8 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
     Handler h;
     float gx, gy, gz;
     double acc;
+    String arff_file_name = "data.arff";
+    Instances instances;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,15 +51,22 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
 //        setContentView(R.layout.activity_start);
 
         try {
+            FileInputStream fileInputStream1 = openFileInput(arff_file_name);
+            DataSource source = new DataSource(fileInputStream1);
+            instances = source.getDataSet();
+            instances.setClassIndex(1);
+
             // deserialize model
-            FileInputStream fileInputStream = openFileInput("J48.model");
-            ObjectInputStream ois = new ObjectInputStream(fileInputStream);
+            FileInputStream fileInputStream2 = openFileInput("J48.model");
+            ObjectInputStream ois = new ObjectInputStream(fileInputStream2);
             this.clf = (Classifier) ois.readObject();
             ois.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
 
         LinearLayout ll = new LinearLayout(this);
         setContentView(ll);
@@ -85,9 +94,9 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
 
         Instance instance = new DenseInstance(2);
         instance.setValue(attri_acc, acc);
+        instance.setDataset(instances);
 
-        // これはinstancesというデータセットにinstanceを追加する?的なものみたいなので
-        // とりあえずスルー
+        // これはinstancesというデータセットにinstanceを追加する?的なものみたいなのでとりあえずスルー
 //        instance.setDataset(instances);
 
         // エラーが出るのでtry, catchしてみた
@@ -98,11 +107,16 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
             //ここのブロックの中には入っている
             // 予測, 0.0がstationary, 1.0がwalking, 2.0がrunのはず
             result = clf.classifyInstance(instance);
-            System.out.println("result is" + result);
+            System.out.println("result = " + result);
             //ここが出力されず予測できてない
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // ここも通ってはいる, resultは全部0.0
+        System.out.println("result-end");
+        System.out.println("result is " + result);
 
         // ダイアログ表示
         if (result == 1.0) {
@@ -154,5 +168,9 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
+
+//    public double classify(Instance) throws Exception {
+//
+//    }
 
 }
