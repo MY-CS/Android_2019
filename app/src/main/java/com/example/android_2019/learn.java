@@ -24,17 +24,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-
-//setContentView(R.layout.activity_learn);
+import android.app.AlertDialog;
 
 public class learn extends AppCompatActivity implements Runnable, SensorEventListener{
 
     SensorManager sm;
-    TextView tv;
+    TextView tv, finish_tv;
     Handler h;
     float gx, gy, gz;
     double acc;
     String file_name = "data_run.csv";
+    int num_sample = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,25 +46,37 @@ public class learn extends AppCompatActivity implements Runnable, SensorEventLis
         tv = new TextView(this);
         ll.addView(tv);
 
+        finish_tv = new TextView(this);
+        ll.addView(finish_tv);
+
         h = new Handler();
-        h.postDelayed(this, 500);
+        h.postDelayed(this, 200);
     }
 
     @Override
     public void run() {
-        // 合成加速度の計算はこれでいいのかな, 全然変化がないんだが
         acc = Math.sqrt(gx * gx + gy * gy + gz * gz);
         tv.setText("X-axis : " + gx + "\n"
                 + "Y-axis : " + gy + "\n"
                 + "Z-axis : " + gz + "\n"
-                + "ACCis : " + acc + "\n");
+                + "ACC : " + acc + "\n");
 
         //ここからファイルの書き込みの追加
-//        String str_data = String.valueOf(acc);
         saveFile(file_name, acc);
-        //
 
-        h.postDelayed(this, 500);
+        num_sample += 1;
+        if (num_sample > 300) {
+            finish_tv.setText("Finish collecting running data");
+            finish_tv.setTextSize(32.0f);
+//            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+//            alertDialog.setTitle("Finish learning running")
+//                    .setMessage("走り状態のデータ収集が完了")
+//                    .setPositiveButton("OK", null)
+//                    .show();
+        }
+
+
+        h.postDelayed(this, 200);
     }
 
     @Override

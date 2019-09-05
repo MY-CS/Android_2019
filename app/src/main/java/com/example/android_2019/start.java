@@ -38,7 +38,7 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
 
     Classifier clf;
     SensorManager sm;
-    TextView tv;
+    TextView tv, alert_tv;
     Handler h;
     float gx, gy, gz;
     double acc;
@@ -74,8 +74,11 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
         tv = new TextView(this);
         ll.addView(tv);
 
+        alert_tv = new TextView(this);
+        ll.addView(alert_tv);
+
         h = new Handler();
-        h.postDelayed(this, 500);
+        h.postDelayed(this, 200);
     }
 
     @Override
@@ -84,56 +87,55 @@ public class start extends AppCompatActivity implements Runnable, SensorEventLis
         tv.setText("X-axis : " + gx + "\n"
                 + "Y-axis : " + gy + "\n"
                 + "Z-axis : " + gz + "\n"
-                + "ACCis : " + acc + "\n");
+                + "ACC : " + acc + "\n");
 
         //make instance
-        // ここは文字列の数字かな? ファイルではnumericってやったけど
-        // indexは0なのかな？, インスタンスの作り方がよく分からん
-
         Attribute attri_acc = new Attribute("acc", 0);
-
         Instance instance = new DenseInstance(2);
         instance.setValue(attri_acc, acc);
         instance.setDataset(instances);
 
-        // これはinstancesというデータセットにinstanceを追加する?的なものみたいなのでとりあえずスルー
-//        instance.setDataset(instances);
-
         // エラーが出るのでtry, catchしてみた
         double result = 0.0;
-        //ここは通ってる
 
         try {
             //ここのブロックの中には入っている
             // 予測, 0.0がstationary, 1.0がwalking, 2.0がrunのはず
             result = clf.classifyInstance(instance);
             System.out.println("result = " + result);
-            //ここが出力されず予測できてない
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // ここも通ってはいる, resultは全部0.0
-        System.out.println("result-end");
-        System.out.println("result is " + result);
-
         // ダイアログ表示
         if (result == 1.0) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-            alertDialog.setTitle("Alert 歩き状態")
-                    .setMessage("歩きスマホをやめてください")
-                    .setPositiveButton("OK", null)
-                    .show();
+            alert_tv.setText("Alert 歩き状態");
+            alert_tv.setTextSize(32.0f);
+//            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+//            alertDialog.setTitle("Alert 歩き状態")
+//                    .setMessage("歩きスマホをやめてください")
+//                    .setPositiveButton("OK", null)
+//                    .show();
         } else if (result == 2.0) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-            alertDialog.setTitle("Alert 走り状態")
-                    .setMessage("歩きスマホをやめてください")
-                    .setPositiveButton("OK", null)
-                    .show();
+            alert_tv.setText("Alert 走り状態");
+            alert_tv.setTextSize(32.0f);
+//            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+//            alertDialog.setTitle("Alert 走り状態")
+//                    .setMessage("歩きスマホをやめてください")
+//                    .setPositiveButton("OK", null)
+//                    .show();
+        } else if (result == 0.0) {
+            alert_tv.setText("静止状態");
+            alert_tv.setTextSize(32.0f);
+//            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+//            alertDialog.setTitle("Alert 走り状態")
+//                    .setMessage("歩きスマホをやめてください")
+//                    .setPositiveButton("OK", null)
+//                    .show();
         }
 
-        h.postDelayed(this, 500);
+        h.postDelayed(this, 200);
     }
 
     @Override

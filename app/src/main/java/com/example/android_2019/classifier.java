@@ -76,14 +76,10 @@ public class classifier extends AppCompatActivity {
 
 
     public void make_arffFile(String write_file_name, String read_file_name) {
-//        String [] line = null;
 
         // try-with-resources
         try {
             // arffファイルを作る
-            // とりあえず全部そのままStringでやってるのでそこを直さないとかも
-            // arffでdoubleのデータ型はどうなるのか?
-
             FileOutputStream fileOutputstream = openFileOutput(write_file_name, MODE_APPEND);
 
             FileInputStream fileInputStream = openFileInput(read_file_name);

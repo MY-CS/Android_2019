@@ -2,6 +2,7 @@ package com.example.android_2019;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -24,11 +25,12 @@ import java.io.OutputStreamWriter;
 public class learn_stationary extends AppCompatActivity implements Runnable, SensorEventListener {
 
     SensorManager sm;
-    TextView tv;
+    TextView tv, finish_tv;
     Handler h;
     float gx, gy, gz;
     double acc;
     String file_name = "data_stationary.csv";
+    int num_sample;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,24 +42,37 @@ public class learn_stationary extends AppCompatActivity implements Runnable, Sen
         tv = new TextView(this);
         ll.addView(tv);
 
+        finish_tv = new TextView(this);
+        ll.addView(finish_tv);
+
         h = new Handler();
-        h.postDelayed(this, 500);
+        h.postDelayed(this, 200);
     }
 
     @Override
     public void run() {
         acc = Math.sqrt(gx * gx + gy * gy + gz * gz);
+
         tv.setText("X-axis : " + gx + "\n"
                 + "Y-axis : " + gy + "\n"
                 + "Z-axis : " + gz + "\n"
-                + "ACCis : " + acc + "\n");
+                + "ACC : " + acc + "\n");
 
         //ここからファイルの書き込みの追加
-//        acc = Math.sqrt(gx * gx + gy * gy + gz * gz);
         saveFile(file_name, acc);
-        //
 
-        h.postDelayed(this, 500);
+        num_sample += 1;
+        if (num_sample > 300) {
+            finish_tv.setText("Finish collecting stationary data");
+            finish_tv.setTextSize(32.0f);
+//            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+//            alertDialog.setTitle("Finish learning stationary")
+//                    .setMessage("静止状態のデータ収集が完了")
+//                    .setPositiveButton("OK", null)
+//                    .show();
+        }
+
+        h.postDelayed(this, 200);
     }
 
     @Override
